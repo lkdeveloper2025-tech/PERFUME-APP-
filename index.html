@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LK PERFUME MASTER | TITAN ULTIMATE 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Manrope:wght@200;300;400;500;600;700;800&family=Fira+Code:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <style>
+        /* ------------------------------------------------------------------------
+           SECTION 1: DESIGN TOKENS (ΜΕΤΑΒΛΗΤΕΣ ΣΧΕΔΙΑΣΗΣ)
+           Εδώ ορίζουμε τα χρώματα και τις σταθερές για όλο το σύστημα.
+           ------------------------------------------------------------------------
+        */
+        :root {
+            --lk-black: #000000;
+            --lk-dark-surface: #080808;
+            --lk-card: #0d0d0d;
+            --lk-gold: #D4AF37; /* CLASSIC GOLD */
+            --lk-gold-bright: #F4DF90;
+            --lk-gold-glow: rgba(212, 175, 55, 0.45);
+            --lk-gold-dim: rgba(212, 175, 55, 0.05);
+            --lk-text-pure: #ffffff;
+            --lk-text-muted: #9a9a9a;
+            --lk-text-low: #3a3a3a;
+            --lk-transition-main: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --lk-shadow-standard: 0 10px 40px rgba(0,0,0,0.8);
+            --lk-blur: blur(30px);
+        }
+
+        /* ------------------------------------------------------------------------
+           SECTION 2: GLOBAL RESET & SCROLLBAR (ΚΑΘΟΛΙΚΕΣ ΡΥΘΜΙΣΕΙΣ)
+           ------------------------------------------------------------------------
+        */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
+        
+        body {
+            background-color: var(--lk-black);
+            color: var(--lk-text-pure);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* CUSTOM SCROLLBAR ΓΙΑ ΕΠΑΓΓΕΛΜΑΤΙΚΗ ΕΜΦΑΝΙΣΗ */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--lk-black); }
+        ::-webkit-scrollbar-thumb { background: var(--lk-gold); border-radius: 50px; }
+
+        /* ------------------------------------------------------------------------
+           SECTION 3: AMBIENT VFX ENGINE (ΜΗΧΑΝΗ ΟΠΤΙΚΩΝ ΕΦΕ)
+           ------------------------------------------------------------------------
+        */
+        .vfx-engine { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
+        .vignette-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%); }
+        .titan-particle {
+            position: absolute; background: var(--lk-gold); border-radius: 50%;
+            opacity: 0; animation: particleMove 20s infinite linear;
+        }
+        @keyframes particleMove {
+            0% { transform: translateY(110vh) scale(0); opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) scale(2); opacity: 0; }
+        }
+
+        /* ------------------------------------------------------------------------
+           SECTION 4: HEADER & AUTH UI (ΚΕΦΑΛΙΔΑ & ΣΥΝΔΕΣΗ)
+           ------------------------------------------------------------------------
+        */
+        .header-glass {
+            position: sticky; top: 0; z-index: 2000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: var(--lk-blur);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 20px 6%;
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1800px; margin: 0 auto; }
+        .brand-titan { display: flex; flex-direction: column; cursor: pointer; text-decoration: none; }
+        .brand-h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; letter-spacing: 2px; }
+        .gold-spark { color: var(--lk-gold); text-shadow: 0 0 15px var(--lk-gold-glow); }
+        .brand-version { font-size: 8px; letter-spacing: 6px; color: var(--lk-text-low); text-transform: uppercase; font-weight: 800; margin-top: -2px; }
+
+        /* BUTTON AUTHENTICATION */
+        .btn-auth-titan {
+            background: #0a0a0a; color: white; border: 1px solid #222;
+            padding: 12px 30px; border-radius: 100px; cursor: pointer;
+            font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 10px;
+            transition: var(--lk-transition-main);
+        }
+        .btn-auth-titan:hover { border-color: var(--lk-gold); color: var(--lk-gold); background: var(--lk-gold-dim); transform: scale(1.05); }
+        .admin-glow { border-color: var(--lk-gold); background: rgba(212, 175, 55, 0.1); box-shadow: 0 0 30px var(--lk-gold-glow); }
+
+        /* ------------------------------------------------------------------------
+           SECTION 5: SEARCH & GRID ARCHITECTURE (ΑΝΑΖΗΤΗΣΗ & ΠΛΕΓΜΑ)
+           ------------------------------------------------------------------------
+        */
+        .search-hero { max-width: 1000px; margin: 50px auto; padding: 0 25px; }
+        .search-box-titan { position: relative; width: 100%; }
+        .titan-input-search {
+            width: 100%; padding: 22px 30px 22px 75px;
+            background: #080808; border: 1px solid #1a1a1a; border-radius: 25px;
+            color: white; font-family: 'Manrope'; font-size: 17px; transition: var(--lk-transition-main);
+        }
+        .titan-input-search:focus { border-color: var(--lk-gold); background: #0c0c0c; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        .search-icon-fixed { position: absolute; left: 25px; top: 50%; transform: translateY(-50%); color: var(--lk-gold); font-size: 32px; }
+
+        .main-container { max-width: 1800px; margin: 0 auto; padding: 0 6% 120px; }
+        .section-label-titan { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 6px; color: var(--lk-gold); margin-bottom: 40px; display: flex; align-items: center; gap: 20px; }
+        .section-label-titan::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--lk-gold-dim), transparent); }
+
+        .perfume-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px;
+        }
+
+        /* ------------------------------------------------------------------------
+           SECTION 6: PERFUME CARD DESIGN (ΣΧΕΔΙΑΣΗ ΚΑΡΤΑΣ)
+           ------------------------------------------------------------------------
+        */
+        .titan-card {
+            background: var(--lk-card); border: 1px solid #111; border-radius: 25px;
+            padding: 30px; transition: var(--lk-transition-main); cursor: pointer;
+            position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 15px;
+        }
+        .titan-card:hover { transform: translateY(-12px) scale(1.03); border-color: var(--lk-gold); box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+        .c-code-gold { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; color: var(--lk-gold); }
+        .c-name-pure { font-size: 17px; font-weight: 700; color: #fff; }
+        .c-cat-low { font-size: 10px; text-transform: uppercase; color: var(--lk-text-low); letter-spacing: 3px; font-weight: 800; }
+
+        /* ------------------------------------------------------------------------
+           SECTION 7: MODAL SYSTEM & ADMIN FAB (MODALS & ADMIN ΚΟΥΜΠΙ)
+           ------------------------------------------------------------------------
+        */
+        .fab-titan-admin {
+            position: fixed; bottom: 50px; right: 50px;
+            width: 80px; height: 80px; background: #000;
+            border: 2px solid var(--lk-gold); border-radius: 50%;
+            display: none; align-items: center; justify-content: center;
+            color: var(--lk-gold); font-size: 45px; cursor: pointer;
+            z-index: 3000; box-shadow: 0 25px 50px rgba(0,0,0,0.7); transition: var(--lk-transition-main);
+        }
+        .fab-titan-admin:hover { transform: rotate(90deg) scale(1.15); background: var(--lk-gold); color: black; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.97); backdrop-filter: var(--lk-blur);
+            z-index: 5000; display: none; align-items: center; justify-content: center;
+            padding: 25px; opacity: 0; transition: 0.5s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-frame {
+            background: #080808; border: 1px solid #1a1a1a; border-radius: 40px;
+            width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;
+            padding: 50px; position: relative; box-shadow: 0 0 100px rgba(0,0,0,0.5);
+        }
+        .close-icon-btn { position: absolute; top: 30px; right: 30px; color: #555; cursor: pointer; transition: 0.3s; }
+        .close-icon-btn:hover { color: var(--lk-gold); transform: rotate(90deg); }
+
+        /* FORM STYLING */
+        .lk-field-group { margin-bottom: 25px; }
+        .lk-label-gold { font-size: 10px; font-weight: 900; color: var(--lk-gold); text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 3px; }
+        .lk-input-control {
+            width: 100%; background: #0e0e0e; border: 1px solid #1a1a1a;
+            padding: 18px; border-radius: 15px; color: white; font-family: 'Manrope'; transition: 0.3s;
+        }
+        .lk-input-control:focus { border-color: var(--lk-gold); background: #121212; }
+        .btn-submit-titan {
+            width: 100%; padding: 22px; border: none; border-radius: 18px;
+            background: var(--lk-gold); color: black; font-weight: 900; font-size: 16px;
+            cursor: pointer; transition: 0.4s; margin-top: 15px;
+        }
+        .btn-submit-titan:hover { background: var(--lk-gold-bright); transform: translateY(-4px); box-shadow: 0 15px 30px var(--lk-gold-glow); }
+
+        /* DETAIL VIEW SPECIFICS */
+        .v-code-titan { font-size: 85px; font-family: 'Playfair Display'; font-weight: 900; color: var(--lk-gold); text-align: center; }
+        .v-meta-card { background: #111; padding: 30px; border-radius: 25px; margin: 30px 0; border-left: 6px solid var(--lk-gold); }
+        .btn-del-entry { background: transparent; color: #ff3b30; border: 1px solid #331111; width: 100%; padding: 18px; border-radius: 15px; cursor: pointer; margin-top: 30px; font-weight: 800; transition: 0.3s; }
+        .btn-del-entry:hover { background: rgba(255,59,48,0.1); border-color: #ff3b30; }
+
+        @keyframes skeletonPulse { 0% { opacity: 0.1; } 50% { opacity: 0.3; } 100% { opacity: 0.1; } }
+        .skeleton-load { background: #111; animation: skeletonPulse 1.5s infinite; border-radius: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="vfx-engine" id="titanVFX">
+        <div class="vignette-overlay"></div>
+    </div>
+
+    <header class="header-glass">
+        <div class="header-content">
+            <a href="#" class="brand-titan" onclick="location.reload()">
+                <span class="brand-h1">LK <span class="gold-spark">PERFUME</span></span>
+                <span class="brand-version">TITAN ULTIMATE EDITION v20.0</span>
+            </a>
+            <div class="auth-portal">
+                <button id="loginBtn" class="btn-auth-titan">
+                    <span class="material-icons-round">lock_person</span>
+                    <span id="authLabel">ΠΥΛΗ ΕΙΣΟΔΟΥ</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="search-hero">
+        <div class="search-box-titan">
+            <span class="material-icons-round search-icon-fixed">manage_search</span>
+            <input type="text" id="masterSearch" class="titan-input-search" placeholder="Αναζήτηση κωδικού, αρώματος ή συστατικών...">
+        </div>
+    </section>
+
+    <main class="main-container">
+        <div class="section-label-titan">Database Collection</div>
+        <div id="loadingStatus" style="text-align: center; padding: 50px; display: none;">
+            <div class="skeleton-load" style="height: 300px; width: 100%;"></div>
+            <div style="margin-top:20px; color:var(--lk-gold); font-size:12px; letter-spacing:2px;">ΣΥΓΧΡΟΝΙΣΜΟΣ ΜΕ ΤΟ CLOUD...</div>
+        </div>
+        <div id="mainGrid" class="perfume-grid">
+            </div>
+    </main>
+
+    <div id="adminFab" class="fab-titan-admin" title="Προσθήκη Νέας Εγγραφής">
+        <span class="material-icons-round">add</span>
+    </div>
+
+    <div id="adminModal" class="modal-overlay">
+        <div class="modal-frame">
+            <span class="material-icons-round close-icon-btn" id="closeAdmin">close</span>
+            <h2 style="text-align:center; margin-bottom:40px; font-family:'Playfair Display';" class="gold-spark">Νέα Καταχώρηση</h2>
+            
+            <div class="lk-field-group">
+                <label class="lk-label-gold">Κωδικός Προϊόντος</label>
+                <input type="text" id="inCode" class="lk-input-control" placeholder="π.χ. L-707">
+            </div>
+            <div class="lk-field-group">
+                <label class="lk-label-gold">Ονομασία Αρώματος</label>
+                <input type="text" id="inName" class="lk-input-control" placeholder="π.χ. Night Titan">
+            </div>
+            <div class="lk-field-group">
+                <label class="lk-label-gold">Κατηγορία Συλλογής</label>
+                <select id="inCat" class="lk-input-control">
+                    <option>Ανδρικό (Pour Homme)</option>
+                    <option>Γυναικείο (Pour Femme)</option>
+                    <option>Unisex (Universal)</option>
+                </select>
+            </div>
+            <div class="lk-field-group">
+                <label class="lk-label-gold">Οσφρητικές Νότες & Περιγραφή</label>
+                <textarea id="inNotes" class="lk-input-control" rows="4" placeholder="Αναλυτική περιγραφή συστατικών..."></textarea>
+            </div>
+
+            <button class="btn-submit-titan" id="saveEntryBtn">ΟΡΙΣΤΙΚΗ ΑΠΟΘΗΚΕΥΣΗ</button>
+        </div>
+    </div>
+
+    <div id="detailModal" class="modal-overlay">
+        <div class="modal-frame" style="border-top: 6px solid var(--lk-gold);">
+            <span class="material-icons-round close-icon-btn" id="closeDetail">close</span>
+            <div id="vCode" class="v-code-titan"></div>
+            <div id="vName" style="text-align:center; font-size:28px; font-weight:800; margin-top:15px;"></div>
+            <div id="vCat" style="text-align:center; color:var(--lk-gold); font-size:12px; margin-top:8px; text-transform:uppercase; letter-spacing:4px;"></div>
+            
+            <div class="v-meta-card">
+                <div style="font-size:11px; font-weight:900; color:var(--lk-gold); margin-bottom:12px; letter-spacing:2px;">ΣΥΝΘΕΣΗ ΑΡΩΜΑΤΟΣ</div>
+                <div id="vNotes" style="font-size:16px; line-height:1.8;"></div>
+            </div>
+
+            <div id="adminActions" style="display: none;">
+                <button class="btn-del-entry" id="deleteEntryBtn">ΔΙΑΓΡΑΦΗ ΑΠΟ ΤΟ ΣΥΣΤΗΜΑ</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Εισαγωγή Απαραίτητων Βιβλιοθηκών από το Firebase CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        /**
+         * ΣΥΝΘΕΣΗ ΡΥΘΜΙΣΕΩΝ FIREBASE (PROJECT CREDENTIALS)
+         */
+        const firebaseConfig = {
+            apiKey: "AIzaSyAUpTUm0EcwWUj_wgIrEjxXtdKdwPa9r5g",
+            authDomain: "lk-finance-pro-2026.firebaseapp.com",
+            projectId: "lk-finance-pro-2026",
+            storageBucket: "lk-finance-pro-2026.firebasestorage.app",
+            messagingSenderId: "685909162556",
+            appId: "1:685909162556:web:6974544e95e9685d3ba139"
+        };
+
+        // Αρχικοποίηση Συστήματος
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        /**
+         * LK TITAN STATE OBJECT (ΔΙΑΧΕΙΡΙΣΗ ΚΑΤΑΣΤΑΣΗΣ)
+         */
+        const TITAN = {
+            db_path: "lk_perfumes_v2",
+            admin_id: "kiourkatiotis.eleftherios@gmail.com",
+            is_admin_active: false,
+            dataset: [],
+            active_id: null
+        };
+
+        /**
+         * UI CONTROLLER ENGINE
+         */
+        const uiControl = {
+            // Μηχανή Σωματιδίων
+            runParticles: () => {
+                const box = document.getElementById('titanVFX');
+                for(let i=0; i<60; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'titan-particle';
+                    p.style.left = Math.random() * 100 + 'vw';
+                    p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+                    p.style.animationDelay = (Math.random() * 10) + 's';
+                    p.style.width = Math.random() * 3 + 'px';
+                    p.style.height = p.style.width;
+                    box.appendChild(p);
+                }
+            },
+            // Διαχείριση Modal
+            toggleModal: (id, status) => {
+                const target = document.getElementById(id);
+                if(status) {
+                    target.style.display = 'flex';
+                    setTimeout(() => target.classList.add('active'), 20);
+                } else {
+                    target.classList.remove('active');
+                    setTimeout(() => target.style.display = 'none', 500);
+                }
+            },
+            // Απόδοση Δεδομένων στο Grid
+            render: (data) => {
+                const grid = document.getElementById('mainGrid');
+                grid.innerHTML = '';
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'titan-card';
+                    card.innerHTML = `
+                        <div class="c-code-gold">${item.code}</div>
+                        <div class="c-name-pure">${item.name}</div>
+                        <div class="c-cat-low">${item.category}</div>
+                    `;
+                    card.onclick = () => uiControl.openDetails(item);
+                    grid.appendChild(card);
+                });
+            },
+            // Άνοιγμα Λεπτομερειών
+            openDetails: (item) => {
+                TITAN.active_id = item.id;
+                document.getElementById('vCode').innerText = item.code;
+                document.getElementById('vName').innerText = item.name;
+                document.getElementById('vCat').innerText = item.category;
+                document.getElementById('vNotes').innerText = item.notes || "Σύνθεση υψηλής ποιότητας LK Perfume.";
+                
+                document.getElementById('adminActions').style.display = TITAN.is_admin_active ? 'block' : 'none';
+                uiControl.toggleModal('detailModal', true);
+            }
+        };
+
+        /**
+         * CLOUD DATA ENGINE (FIRESTORE)
+         */
+        const cloudEngine = {
+            // Ανάκτηση Δεδομένων
+            fetchData: async () => {
+                document.getElementById('loadingStatus').style.display = 'block';
+                try {
+                    const q = query(collection(db, TITAN.db_path), orderBy("code", "asc"));
+                    const snap = await getDocs(q);
+                    TITAN.dataset = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    uiControl.render(TITAN.dataset);
+                } catch (err) {
+                    console.error("Critical Cloud Error:", err);
+                } finally {
+                    document.getElementById('loadingStatus').style.display = 'none';
+                }
+            },
+            // Αποθήκευση Δεδομένων
+            saveData: async () => {
+                if(!TITAN.is_admin_active) return alert("ACCESS DENIED: Administrative Privileges Required.");
+                
+                const payload = {
+                    code: document.getElementById('inCode').value.toUpperCase().trim(),
+                    name: document.getElementById('inName').value.trim(),
+                    category: document.getElementById('inCat').value,
+                    notes: document.getElementById('inNotes').value.trim(),
+                    created_at: serverTimestamp()
+                };
+
+                if(!payload.code || !payload.name) return alert("Συμπληρώστε Κωδικό και Όνομα!");
+
+                try {
+                    await addDoc(collection(db, TITAN.db_path), payload);
+                    uiControl.toggleModal('adminModal', false);
+                    cloudEngine.fetchData();
+                    // Καθαρισμός Πεδίων
+                    document.querySelectorAll('.lk-input-control').forEach(i => i.value = '');
+                } catch (e) {
+                    alert("Σφάλμα Αποθήκευσης: " + e.message);
+                }
+            },
+            // Διαγραφή Δεδομένων
+            deleteData: async () => {
+                if(!confirm("Είστε βέβαιος για την οριστική διαγραφή; Η ενέργεια δεν αναιρείται.")) return;
+                try {
+                    await deleteDoc(doc(db, TITAN.db_path, TITAN.active_id));
+                    uiControl.toggleModal('detailModal', false);
+                    cloudEngine.fetchData();
+                } catch (e) {
+                    alert("Σφάλμα Διαγραφής!");
+                }
+            }
+        };
+
+        /**
+         * AUTHENTICATION GATE (SECURITY)
+         */
+        const authGate = {
+            // Παρακολούθηση Κατάστασης Χρήστη
+            monitor: () => {
+                onAuthStateChanged(auth, (user) => {
+                    const fab = document.getElementById('adminFab');
+                    const label = document.getElementById('authLabel');
+                    const btn = document.getElementById('loginBtn');
+
+                    if(user) {
+                        console.log("LOGIN SUCCESS: ", user.email);
+                        if(user.email === TITAN.admin_id) {
+                            TITAN.is_admin_active = true;
+                            fab.style.display = 'flex';
+                            label.innerText = "LK ADMIN";
+                            btn.classList.add('admin-glow');
+                        } else {
+                            TITAN.is_admin_active = false;
+                            fab.style.display = 'none';
+                            label.innerText = user.displayName.split(' ')[0];
+                            btn.classList.remove('admin-glow');
+                        }
+                    } else {
+                        TITAN.is_admin_active = false;
+                        fab.style.display = 'none';
+                        label.innerText = "ΠΥΛΗ ΕΙΣΟΔΟΥ";
+                        btn.classList.remove('admin-glow');
+                    }
+                });
+            },
+            // Διαχείριση Login/Logout
+            trigger: () => {
+                if(auth.currentUser) {
+                    signOut(auth).then(() => location.reload());
+                } else {
+                    // Χρήση Redirect για μέγιστη συμβατότητα
+                    signInWithRedirect(auth, provider);
+                }
+            }
+        };
+
+        /**
+         * ΑΝΑΖΗΤΗΣΗ (SEARCH SYSTEM)
+         */
+        document.getElementById('masterSearch').oninput = (e) => {
+            const val = e.target.value.toLowerCase();
+            const results = TITAN.dataset.filter(p => 
+                p.code.toLowerCase().includes(val) || 
+                p.name.toLowerCase().includes(val) || 
+                (p.notes && p.notes.toLowerCase().includes(val))
+            );
+            uiControl.render(results);
+        };
+
+        /**
+         * ΣΥΝΔΕΣΗ ΓΕΓΟΝΟΤΩΝ (EVENT BINDING)
+         */
+        document.getElementById('loginBtn').onclick = () => authGate.trigger();
+        document.getElementById('adminFab').onclick = () => uiControl.toggleModal('adminModal', true);
+        document.getElementById('closeAdmin').onclick = () => uiControl.toggleModal('adminModal', false);
+        document.getElementById('closeDetail').onclick = () => uiControl.toggleModal('detailModal', false);
+        document.getElementById('saveEntryBtn').onclick = () => cloudEngine.saveData();
+        document.getElementById('deleteEntryBtn').onclick = () => cloudEngine.deleteData();
+
+        /**
+         * ΕΚΚΙΝΗΣΗ ΕΦΑΡΜΟΓΗΣ (BOOTSTRAP)
+         */
+        // Έλεγχος Redirect Result (Πολύ Σημαντικό)
+        getRedirectResult(auth).catch(e => console.error("Titan Redirect Fault:", e));
+        
+        // Εκκίνηση Μονάδων
+        uiControl.runParticles();
+        authGate.monitor();
+        cloudEngine.fetchData();
+
+    </script>
+</body>
+</html>
